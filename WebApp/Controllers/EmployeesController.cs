@@ -10,22 +10,22 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    public class EmployeesController : Controller
+    public class employeesController : Controller
     {
         private readonly WebAppContext _context;
 
-        public EmployeesController(WebAppContext context)
+        public employeesController(WebAppContext context)
         {
             _context = context;
         }
 
-        // GET: Employees
+        // GET: employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employee.ToListAsync());
+            return View(await _context.employee.ToListAsync());
         }
 
-        // GET: Employees/Details/5
+        // GET: employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,8 +33,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.id == id);
+            var employee = await _context.employee
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -43,18 +43,18 @@ namespace WebApp.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Create
+        // GET: employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Employees/Create
+        // POST: employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Fullname,Department")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,Fullname,Department,Email")] employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace WebApp.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Edit/5
+        // GET: employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,7 +73,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _context.employee.FindAsync(id);
             if (employee == null)
             {
                 return NotFound();
@@ -81,14 +81,14 @@ namespace WebApp.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
+        // POST: employees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Fullname,Department")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Fullname,Department,Email")] employee employee)
         {
-            if (id != employee.id)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace WebApp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.id))
+                    if (!employeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -116,7 +116,7 @@ namespace WebApp.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
+        // GET: employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,8 +124,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.id == id);
+            var employee = await _context.employee
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -134,20 +134,20 @@ namespace WebApp.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Delete/5
+        // POST: employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employee.FindAsync(id);
-            _context.Employee.Remove(employee);
+            var employee = await _context.employee.FindAsync(id);
+            _context.employee.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
+        private bool employeeExists(int id)
         {
-            return _context.Employee.Any(e => e.id == id);
+            return _context.employee.Any(e => e.Id == id);
         }
     }
 }
