@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Data;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -33,7 +34,7 @@ namespace WebApp.Controllers
             }
 
             var employee = await _context.Employee
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -49,11 +50,11 @@ namespace WebApp.Controllers
         }
 
         // POST: Employees/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Fullname,Department,Email,Phone,Address")] Employee employee)
+        public async Task<IActionResult> Create([Bind("id,Fullname,Department")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +73,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.Id == id);
+            var employee = await _context.Employee.FindAsync(id);
             if (employee == null)
             {
                 return NotFound();
@@ -81,13 +82,13 @@ namespace WebApp.Controllers
         }
 
         // POST: Employees/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Fullname,Department")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Fullname,Department")] Employee employee)
         {
-            if (id != employee.Id)
+            if (id != employee.id)
             {
                 return NotFound();
             }
@@ -101,7 +102,7 @@ namespace WebApp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!EmployeeExists(employee.id))
                     {
                         return NotFound();
                     }
@@ -124,7 +125,7 @@ namespace WebApp.Controllers
             }
 
             var employee = await _context.Employee
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -138,7 +139,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.Id == id);
+            var employee = await _context.Employee.FindAsync(id);
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -146,7 +147,7 @@ namespace WebApp.Controllers
 
         private bool EmployeeExists(int id)
         {
-            return _context.Employee.Any(e => e.Id == id);
+            return _context.Employee.Any(e => e.id == id);
         }
     }
 }
